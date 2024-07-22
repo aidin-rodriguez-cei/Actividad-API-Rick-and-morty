@@ -2,9 +2,9 @@ import { useState } from 'react'
 import './css/App.css'
 import './css/Style.css'
 
-import Personajes from './components/Personajes'
-import Lugares from './components/Lugares'
-import Episodios from './components/Episodios'
+import Personajes from './pages/Personajes'
+import Lugares from './pages/Ubicaciones'
+import Episodios from './pages/Episodios'
 
 function App() {
   const [seccion, setSeccion] = useState('Personajes');
@@ -16,15 +16,15 @@ function App() {
 
       <div className="nav-buttons">
         <button onClick={() => setSeccion('Personajes')}>Personajes</button>
-        <button onClick={() => setSeccion('Lugares')}>Lugares</button>
+        <button onClick={() => setSeccion('Ubicaciones')}>Ubicaciones</button>
         <button onClick={() => setSeccion('Episodios')}>Episodios</button>
       </div>
 
-      <main className='Content'>
+      <div className='Content'>
         {seccion == "Personajes" && <Personajes />}
-        {seccion == "Lugares" && <Lugares />}
+        {seccion == "Ubicaciones" && <Ubicaciones />}
         {seccion == "Episodios" && <Episodios />}
-      </main> 
+      </div> 
 
 
     </>

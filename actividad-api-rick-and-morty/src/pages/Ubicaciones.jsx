@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const  Lugares = () => {
+const  Ubicaciones = () => {
 
     const [data, setData] = useState([]);
 
@@ -42,4 +42,4 @@ const  Lugares = () => {
 
 
 
-export default Lugares;
+export default Ubicaciones;
