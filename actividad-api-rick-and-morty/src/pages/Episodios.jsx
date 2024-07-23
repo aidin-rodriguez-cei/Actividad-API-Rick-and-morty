@@ -2,44 +2,68 @@ import { useState, useEffect } from "react";
 
 const  Episodios = () => {
 
-    const [data, setData] = useState([]);
+    const [episodios, setEpisodios] = useState([])
+    const [info, setInfo] = useState({
+        count: 0,
+        next: null,
+        prev: null,
+        page: 0
+    })
 
     useEffect( ()=> {
-        console.log("Obtengo la data");
-        getData();
-    }, []);
+        getEpisodios("https://rickandmortyapi.com/api/episode"); 
+        console.log("Cargando datos");
+    }, []); 
 
-    const getData = async () => {
+    const getEpisodios = async (url) => {
         try {
-            //llamar a la API y esperar la respuesta
-            const respuesta = await fetch("https://rickandmortyapi.com/api/episode");
-            // Convertir el string de JSON en un objet JS
-            const objJS = await respuesta.json();
-            console.log(objJS);
-            // Guardo la info en mi set
-            setData(objJS.results);
+            const respuesta = await fetch(url);
+            const objeto = await respuesta.json();
+            console.log("Objeto vale: ", objeto);
+            setEpisodios(objeto.results);
+            setInfo(objeto.info);
+
         } catch (e) {
             console.log("Upsi tenemos un error:",e);
         }
     }
 
-    return (
-        <>
-        {!data.length && "Cargando..." }
-        {
-        data.map((episode) => {
-            return (
-                <div key={episode.id}>
-                        <h3>{episode.name}</h3>
-                        <p>{episode.episode}</p>
-                  
-                </ div>
-            )
-        })}
-        </>
-    );
+    return (  
+        <section>
+        <h3>Episodios({info.count})</h3>
+
+        <div className="flexBetween">
+            <button disabled={!info.prev} onClick={()=>{getEpisodios(info.prev)}}>Ant</button>
+            <div className="flexCenter">
+            </div>
+            <button disabled={!info.next} onClick={()=>{getEpisodios(info.next)}}>Sig</button>
+            
+        </div>
+
+        <div className="flexGrid">
+            {
+            episodios.map((Episodios) => (
+                        < EpisodiosCard key={Episodios.id} {...Episodios}/>
+                    ))
+
+
+                }
+
+        </div>
+    </section>
+    )
 }
 
 
+const EpisodiosCard = ({id, name, air_date, episode}) => {
+    return(
+        <article className="Card">
+        <p>Nombre: {name}</p>
+        <p>Air Date: {air_date}</p>
+        <p>Episodio: {episode}</p>
+        </article>
+    )
+}
 
+ 
 export default Episodios;

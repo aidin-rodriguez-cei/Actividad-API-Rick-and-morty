@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 const  Personajes = () => {
 
     const [personajes, setPersonajes] = useState([]);
+    const [filteredPersonajes, setFilteredPersonajes] = useState([]);
     const [info, setInfo] = useState({
         count: 0,
         next: null,
@@ -10,10 +11,16 @@ const  Personajes = () => {
         page: 0
     })
 
+    const [filter, setFilter] = useState('all'); // Estado para el filtro
+
     useEffect( ()=> {
         getPersonajes("https://rickandmortyapi.com/api/character"); //utilizando async/await
         console.log("Cargando datos");
     }, []); // al estar vacìo unicamente se ejecuta en componentDidMount
+
+    useEffect(() => {
+        applyFilter(filter); // Aplicar el filtro cuando personajes o filter cambian
+    }, [personajes, filter]);
 
     const getPersonajes = async (url) => {
         try {
@@ -34,6 +41,14 @@ const  Personajes = () => {
         }
     }
 
+    const applyFilter = (filter) => {
+        if (filter === 'all') {
+            setFilteredPersonajes(personajes);
+        } else {
+            setFilteredPersonajes(personajes.filter(p => p.species.toLowerCase() === filter));
+        }
+    };
+
     return (
         <section>
             <h3>Personajes({info.count})</h3>
@@ -41,6 +56,9 @@ const  Personajes = () => {
             <div className="flexBetween">
                 <button disabled={!info.prev} onClick={()=>{getPersonajes(info.prev)}}>Ant</button>
                 <div className="flexCenter">
+                    <button onClick={() => setFilter('all')}>Todos</button>
+                    <button onClick={() => setFilter('human')}>Humanos</button>
+                    <button onClick={() => setFilter('alien')}>Alienígenas</button>
                 </div>
                 <button disabled={!info.next} onClick={()=>{getPersonajes(info.next)}}>Sig</button>
                 
@@ -48,8 +66,8 @@ const  Personajes = () => {
 
             <div className="flexGrid">
                 {
-                personajes.map((Personaje) => (
-                            < PersonajeCard key={Personaje.id} {...Personaje}/>
+                filteredPersonajes.map((personaje) => (
+                            < PersonajeCard key={personaje.id} {...personaje}/>
                         ))
 
 
